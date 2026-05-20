@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Hotmart Spark</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --bg: #0d0d0f;
+      --bg-card: #1c1c1e;
+      --bg-card-secondary: #2a2a2c;
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255,255,255,0.55);
+      --text-muted: rgba(255,255,255,0.35);
+      --accent-orange: #d95e00;
+      --border-subtle: rgba(255,255,255,0.08);
+      --border-card: rgba(255,255,255,0.13);
+      --radius: 12px;
+      --px: 16px;
+    }
+    html, body, #root { height: 100%; }
+    body { background: #000; color: var(--text-primary); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+    #root { display: flex; justify-content: center; min-height: 100%; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; color: inherit; }
+    .app { width: 100%; max-width: 430px; min-height: 100%; background: var(--bg); position: relative; overflow-x: hidden; }
+
+    /* HERO */
+    .hero { position: relative; width: 100%; height: 220px; overflow: hidden; background: radial-gradient(ellipse at 55% 25%, rgba(180,90,10,0.55) 0%, transparent 55%), radial-gradient(ellipse at 40% 70%, rgba(80,30,0,0.4) 0%, transparent 50%), linear-gradient(180deg,#1a0d00 0%,#0d0d0f 100%); }
+    .hero__btn { position: absolute; top: 14px; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; z-index: 10; transition: opacity .15s; }
+    .hero__btn:active { opacity: .75; }
+    .hero__back { left: 16px; background: rgba(0,0,0,.4); color: white; }
+    .hero__menu { right: 16px; background: var(--accent-orange); color: white; width: 40px; height: 40px; }
+    .hero__gradient { position: absolute; bottom: 0; left: 0; right: 0; height: 90px; background: linear-gradient(to bottom,transparent,var(--bg)); pointer-events: none; }
+
+    /* EVENT INFO */
+    .event-info { padding: 14px var(--px) 10px; }
+    .event-info__title { font-size: 22px; font-weight: 700; text-align: center; letter-spacing: -.3px; margin-bottom: 16px; }
+    .event-info__details { border: 1px solid var(--border-card); border-radius: var(--radius); padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .event-info__row { display: flex; align-items: flex-start; gap: 10px; }
+    .event-info__icon { flex-shrink: 0; color: var(--text-secondary); display: flex; margin-top: 1px; }
+    .event-info__text { font-size: 14px; line-height: 1.4; }
+
+    /* BUTTONS */
+    .action-buttons { padding: 14px var(--px) 8px; display: flex; flex-direction: column; gap: 10px; }
+    .btn-tickets { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background: white; color: #111; border-radius: 100px; padding: 14px 20px; font-size: 15px; font-weight: 600; transition: opacity .15s; }
+    .btn-tickets:active { opacity: .85; }
+    .btn-row { display: flex; gap: 10px; }
+    .btn-secondary { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; background: transparent; color: white; border: 1px solid rgba(255,255,255,.22); border-radius: 100px; padding: 12px 14px; font-size: 14px; font-weight: 600; transition: opacity .15s; }
+    .btn-secondary:active { opacity: .75; }
+
+    /* TAB BAR */
+    .tab-bar { display: flex; border-bottom: 1px solid var(--border-subtle); padding: 0 var(--px); margin-top: 6px; }
+    .tab-bar__tab { padding: 14px 16px 12px; font-size: 15px; font-weight: 500; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .2s; white-space: nowrap; letter-spacing: -.1px; }
+    .tab-bar__tab--active { color: white; border-bottom-color: white; font-weight: 600; }
+
+    /* TAB CONTENT */
+    .tab-content { padding: 20px var(--px) 48px; }
+
+    /* SECTION */
+    .section { margin-bottom: 28px; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-size: 18px; font-weight: 700; letter-spacing: -.2px; }
+    .section-link { display: flex; align-items: center; gap: 5px; font-size: 14px; color: var(--text-secondary); background: none; border: none; padding: 0; transition: opacity .15s; }
+    .section-link:active { opacity: .7; }
+
+    /* SOBRE */
+    .sobre__text { font-size: 14px; line-height: 1.65; color: var(--text-secondary); }
+    .sobre__text p { margin-bottom: 12px; }
+    .sobre__text p:last-child { margin-bottom: 0; }
+    .sobre__text strong { color: var(--text-primary); font-weight: 600; }
+    .sobre__collapsed { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; font-size: 14px; line-height: 1.65; color: var(--text-secondary); }
+    .sobre__toggle-row { margin-top: 4px; }
+    .sobre__toggle { font-size: 14px; font-weight: 700; color: white; background: none; border: none; padding: 0; text-decoration: underline; text-underline-offset: 2px; transition: opacity .15s; }
+    .sobre__toggle:active { opacity: .7; }
+    .sobre__toggle--less { display: block; margin-top: 8px; }
+
+    /* MATERIALS CAROUSEL */
+    .materials-carousel { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 2px; }
+    .materials-carousel::-webkit-scrollbar { display: none; }
+    .mat-card { min-width: 196px; background: var(--bg-card); border-radius: var(--radius); padding: 12px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .mat-card__thumb { width: 56px; height: 40px; border-radius: 6px; overflow: hidden; flex-shrink: 0; }
+    .mat-card__thumb-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .mat-card__info { flex: 1; min-width: 0; }
+    .mat-card__title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
+    .mat-card__subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mat-card__action { flex-shrink: 0; color: var(--text-secondary); display: flex; }
+
+    /* SCHEDULE */
+    .schedule-list { display: flex; flex-direction: column; }
+    .schedule-day-group { display: flex; gap: 12px; }
+    .schedule-day-group + .schedule-day-group { margin-top: 4px; }
+    .day-label { display: flex; flex-direction: column; align-items: center; width: 40px; flex-shrink: 0; padding-top: 14px; }
+    .day-label__name { font-size: 11px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .5px; line-height: 1; }
+    .day-label__number { font-size: 26px; font-weight: 700; line-height: 1.1; color: var(--text-primary); margin-top: 2px; }
+    .day-sessions { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; padding-bottom: 8px; }
+
+    /* SESSION CARD */
+    .session-card { background: var(--bg-card); border-radius: var(--radius); padding: 14px; cursor: pointer; transition: opacity .15s; }
+    .session-card:active { opacity: .85; }
+    .session-card__speakers { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .speaker-avatars { display: flex; align-items: center; flex-shrink: 0; }
+    .speaker-avatar { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--bg-card); display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 800; color: white; flex-shrink: 0; }
+    .speaker-avatar + .speaker-avatar { margin-left: -7px; }
+    .session-card__speaker-names { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .session-card__body { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .session-card__title { font-size: 14px; font-weight: 700; line-height: 1.45; flex: 1; min-width: 0; }
+    .session-card__chevron { flex-shrink: 0; color: var(--text-secondary); display: flex; align-items: center; margin-top: 2px; }
+    .session-card__chevron svg { transition: transform .25s ease; }
+    .session-card__chevron--up svg { transform: rotate(180deg); }
+    .session-card__meta { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+    .session-meta-item { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-secondary); }
+    .session-card__expanded { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-subtle); }
+    .session-card__description { font-size: 13px; color: var(--text-secondary); line-height: 1.6; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+    .session-card__more-btn { margin-top: 12px; background: var(--bg-card-secondary); color: white; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 600; display: inline-block; transition: opacity .15s; }
+    .session-card__more-btn:active { opacity: .75; }
+
+    /* SHOW ALL */
+    .btn-show-all { width: 100%; background: var(--bg-card); color: white; border-radius: 100px; padding: 14px; font-size: 15px; font-weight: 600; margin-top: 4px; text-align: center; transition: opacity .15s; }
+    .btn-show-all:active { opacity: .75; }
+
+    /* MATERIALS LIST */
+    .material-list { display: flex; flex-direction: column; gap: 8px; }
+    .material-item { background: var(--bg-card); border-radius: var(--radius); padding: 12px; display: flex; align-items: center; gap: 12px; }
+    .material-item__media { flex-shrink: 0; }
+    .material-item__thumb { width: 64px; height: 48px; border-radius: 8px; overflow: hidden; }
+    .material-item__thumb-inner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .material-item__icon { width: 46px; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .material-item__icon--pdf { background: #c0392b; }
+    .material-item__icon--link { background: var(--bg-card-secondary); }
+    .material-item__icon--file { background: var(--bg-card-secondary); }
+    .material-item__info { flex: 1; min-width: 0; }
+    .material-item__title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
+    .material-item__subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .material-item__action { flex-shrink: 0; color: var(--text-secondary); display: flex; padding: 4px; transition: opacity .15s; }
+    .material-item__action:active { opacity: .6; }
+    .pdf-text { font-size: 9px; font-weight: 800; color: white; letter-spacing: .5px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    // ─── DATA ───────────────────────────────────────────────────────────────
+    const eventData = {
+      name: 'Hotmart Spark',
+      date: '31 de março 2026',
+      location: 'Community Creators Academy - São Paulo, SP',
+      ticketCount: 3,
+      about: 'O 3º Encontro de Profissionais de 3D e Audiovisual é o ponto de convergência entre a técnica acadêmica e a realidade dos grandes estúdios globais. Em sua terceira edição, o evento deixa as telas para ganhar o mundo real no Centro de Convenções de São Paulo, transformando-se no maior ponto de encontro para artistas, modeladores, diretores de arte e entusiastas da computação gráfica no Brasil.',
+      aboutHtml: `<p>O 3º Encontro de Profissionais de 3D e Audiovisual é o ponto de convergência entre a técnica acadêmica e a realidade dos grandes estúdios globais. Em sua terceira edição, o evento deixa as telas para ganhar o mundo real no Centro de Convenções de São Paulo, transformando-se no maior ponto de encontro para artistas, modeladores, diretores de arte e entusiastas da computação gráfica no Brasil. 🇧🇷</p>
+<p>Ao longo de dois dias intensos (10 e 11 de setembro), o evento oferece uma imersão profunda nas tendências que estão moldando o futuro do entretenimento e da tecnologia. 💡</p>
+<p><strong>Por que participar?</strong> 🤔</p>
+<p>Este encontro foi desenhado para quem não se contenta com o básico. Enquanto a nossa escola digital entrega o domínio das ferramentas, o evento presencial entrega a visão de mercado e o networking que os tutoriais não conseguem alcançar.</p>
+<p><strong>Palestras de Classe Mundial:</strong> Aprenda com quem está no "front" de produção de títulos AAA e blockbusters internacionais.</p>
+<p><strong>Networking Estratégico:</strong> Saia da bolha digital e conecte-se com recrutadores, diretores e possíveis parceiros de projeto.</p>
+<p><strong>Tecnologia de Ponta:</strong> Áreas de demonstração com o que há de mais novo em captura de movimento, renderização em tempo real e hardware de alta performance.</p>
+<p>Prepare-se para trocar o mouse pelo aperto de mão e o chat pelo café com quem respira 3D todos os dias. O próximo nível do seu portfólio começa aqui.</p>`,
+      materials: [
+        { id: 'm1', type: 'youtube',   title: 'Como Manu Gavassi',          subtitle: 'https://www.youtube.com/watch?v=...' },
+        { id: 'm2', type: 'pdf-image', title: 'Receita-Pizza-Napolitana',   subtitle: 'PDF · 1.2mb' },
+        { id: 'm3', type: 'pdf-icon',  title: 'Receita-Pizza-Napolitana',   subtitle: 'PDF · 1.2mb' },
+        { id: 'm4', type: 'link',      title: 'Como Manu Gavassi',          subtitle: 'https://www.youtube.com/watch?v=...' },
+        { id: 'm5', type: 'file',      title: 'Receita-Pizza-Napolitana',   subtitle: '1.2mb' },
+        { id: 'm6', type: 'file',      title: 'Receita-Pizza-Napolitana',   subtitle: '1.2mb' },
+        { id: 'm7', type: 'link',      title: 'Como Manu Gavassi',          subtitle: 'https://www.youtube.com/watch?v=...' },
+        { id: 'm8', type: 'youtube',   title: 'Workshop: Iluminação 3D',    subtitle: 'https://www.youtube.com/watch?v=...' },
+        { id: 'm9', type: 'pdf-icon',  title: 'Guia-Renderização-VFX',      subtitle: 'PDF · 3.5mb' },
+        { id: 'm10',type: 'file',      title: 'Slides-Masterclass',         subtitle: '8.2mb' },
+        { id: 'm11',type: 'link',      title: 'Portfólio 3D - Referências', subtitle: 'https://www.artstation.com/...' },
+        { id: 'm12',type: 'pdf-image', title: 'Cronograma-Oficial-Evento',  subtitle: 'PDF · 0.8mb' },
+      ],
+      schedule: [
+        {
+          day: 10, dayName: 'SÁB',
+          sessions: [
+            { id: 's1', title: 'Credenciamento e abertura', startTime: '20h', endTime: '21h',
+              description: 'Credenciamento dos participantes e abertura oficial do evento com boas-vindas da organização.' },
+            { id: 's2', title: 'Palestra: Construindo Mundos AAA com Dr. Aris Thorne (Episódio Especial)',
+              startTime: '20h', endTime: '21h', venue: 'Palco Principal',
+              speakers: [
+                { id: 'sp1', name: 'Dr. Ari Thorne', initials: 'AT', color: '#8B4513' },
+                { id: 'sp2', name: 'Carlos Junior',  initials: 'CJ', color: '#2E8B57' },
+              ],
+              description: 'Prepare-se para dominar a verdadeira Pizza Napolitana com a renomada chef Antonia Lofaso! Nos dias 10 e 11 de março de 2026, venha participar de uma imersão presencial que une o rigor das tradições italianas às técn...' },
+          ],
+        },
+        {
+          day: 11, dayName: 'DOM',
+          sessions: [
+            { id: 's3', title: 'Palestra: Modelagem de Personagens Hiper-realistas com Beatriz Fontana',
+              startTime: '20h', endTime: '21h',
+              speakers: [{ id: 'sp3', name: 'Beatriz Fontana', initials: 'BF', color: '#7B2D8B' }],
+              description: 'Uma palestra imersiva sobre as técnicas mais avançadas de modelagem de personagens hiper-realistas utilizadas em produções de alto impacto.' },
+            { id: 's4', title: 'Palestra: O Futuro do VFX no Cinema com Marcus Vance (Insights Exclusivos)',
+              startTime: '20h', endTime: '21h',
+              speakers: [{ id: 'sp4', name: 'Marcus Vence', initials: 'MV', color: '#C0392B' }],
+              description: 'Marcus Vance compartilha sua visão sobre o futuro dos efeitos visuais no cinema e como as novas tecnologias estão transformando a indústria.' },
+            { id: 's5', title: 'Palestra: Realidade Aumentada e Novos Mercados de Trabalho',
+              startTime: '20h', endTime: '21h',
+              speakers: [{ id: 'sp5', name: 'Juliana Salles', initials: 'JS', color: '#2980B9' }],
+              description: 'Como a realidade aumentada está criando novas oportunidades de trabalho e transformando mercados tradicionais.' },
+            { id: 's6', title: "Palestra: Masterclass de Renderização Real-Time com Kevin O'Connell",
+              startTime: '20h', endTime: '21h',
+              speakers: [{ id: 'sp6', name: "Kevin O'Connell", initials: 'KO', color: '#16A085' }],
+              description: "Uma masterclass completa sobre técnicas de renderização em tempo real, referência mundial em inovação tecnológica." },
+          ],
+        },
+      ],
+    };
+
+    // ─── ICONS ──────────────────────────────────────────────────────────────
+    const BackIcon = () => (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/>
+      </svg>
+    );
+    const DotsIcon = () => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/>
+      </svg>
+    );
+    const CalendarIcon = () => (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+    );
+    const LocationIcon = () => (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+      </svg>
+    );
+    const TicketIcon = () => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 9a3 3 0 010-6h20a3 3 0 010 6"/><path d="M2 15a3 3 0 000 6h20a3 3 0 000-6"/>
+        <path d="M2 9v6M22 9v6"/><line x1="9" y1="3" x2="9" y2="21" strokeDasharray="2 2"/>
+      </svg>
+    );
+    const ChevronDown = ({ up }) => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition:'transform .25s ease', transform: up ? 'rotate(180deg)' : 'none' }}>
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    );
+    const ArrowRight = () => (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      </svg>
+    );
+    const ExternalLink = () => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+        <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+      </svg>
+    );
+    const DownloadIcon = () => (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+    );
+    const ClockIcon = () => (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+    );
+    const MapPin = () => (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+      </svg>
+    );
+    const LinkIcon = () => (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+      </svg>
+    );
+    const FileIcon = () => (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <path d="M12 18v-6"/><polyline points="9 15 12 18 15 15"/>
+      </svg>
+    );
+
+    // ─── THUMBNAIL HELPERS ───────────────────────────────────────────────────
+    const YoutubeThumbnail = () => (
+      <div style={{ width:'100%', height:'100%', background:'linear-gradient(135deg,#b02020,#5c1010)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.8)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
+    );
+    const PizzaThumbnail = () => (
+      <div style={{ width:'100%', height:'100%', background:'linear-gradient(135deg,#c0622a,#5a2000)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,200,150,0.5)" strokeWidth="1.5">
+          <circle cx="12" cy="12" r="9"/><path d="M12 3L12 21"/><path d="M3 12L21 12"/>
+        </svg>
+      </div>
+    );
+    const PdfBox = () => (
+      <div className="material-item__icon material-item__icon--pdf"><span className="pdf-text">PDF</span></div>
+    );
+    const LinkBox = () => (
+      <div className="material-item__icon material-item__icon--link"><LinkIcon/></div>
+    );
+    const FileBox = () => (
+      <div className="material-item__icon material-item__icon--file"><FileIcon/></div>
+    );
+
+    // ─── MATERIAL ITEM ───────────────────────────────────────────────────────
+    function MaterialItem({ material, compact }) {
+      const isDownload = ['pdf-image','pdf-icon','file'].includes(material.type);
+
+      const Media = () => {
+        if (material.type === 'youtube') return compact
+          ? <div className="mat-card__thumb"><div className="mat-card__thumb-inner"><YoutubeThumbnail/></div></div>
+          : <div className="material-item__thumb"><div className="material-item__thumb-inner"><YoutubeThumbnail/></div></div>;
+        if (material.type === 'pdf-image') return compact
+          ? <div className="mat-card__thumb"><div className="mat-card__thumb-inner"><PizzaThumbnail/></div></div>
+          : <div className="material-item__thumb"><div className="material-item__thumb-inner"><PizzaThumbnail/></div></div>;
+        if (material.type === 'pdf-icon') return <PdfBox/>;
+        if (material.type === 'link')     return <LinkBox/>;
+        return <FileBox/>;
+      };
+
+      if (compact) {
+        return (
+          <div className="mat-card">
+            <Media/>
+            <div className="mat-card__info">
+              <div className="mat-card__title">{material.title}</div>
+              {material.subtitle && <div className="mat-card__subtitle">{material.subtitle}</div>}
+            </div>
+            <span className="mat-card__action">{isDownload ? <DownloadIcon/> : <ExternalLink/>}</span>
+          </div>
+        );
+      }
+
+      return (
+        <div className="material-item">
+          <div className="material-item__media"><Media/></div>
+          <div className="material-item__info">
+            <div className="material-item__title">{material.title}</div>
+            {material.subtitle && <div className="material-item__subtitle">{material.subtitle}</div>}
+          </div>
+          <button className="material-item__action">{isDownload ? <DownloadIcon/> : <ExternalLink/>}</button>
+        </div>
+      );
+    }
+
+    // ─── SCHEDULE ITEM ───────────────────────────────────────────────────────
+    function ScheduleItem({ session, expanded, onToggle }) {
+      return (
+        <div className="session-card" onClick={onToggle}>
+          {session.speakers && session.speakers.length > 0 && (
+            <div className="session-card__speakers">
+              <div className="speaker-avatars">
+                {session.speakers.map(sp => (
+                  <div key={sp.id} className="speaker-avatar" style={{ background: sp.color }}>{sp.initials}</div>
+                ))}
+              </div>
+              <span className="session-card__speaker-names">
+                {session.speakers.map(s => s.name).join(', ')}
+              </span>
+            </div>
+          )}
+          <div className="session-card__body">
+            <span className="session-card__title">{session.title}</span>
+            <span className={`session-card__chevron${expanded ? ' session-card__chevron--up' : ''}`}>
+              <ChevronDown up={expanded}/>
+            </span>
+          </div>
+          <div className="session-card__meta">
+            <span className="session-meta-item"><ClockIcon/>{session.startTime} - {session.endTime}</span>
+            {session.venue && <span className="session-meta-item"><MapPin/>{session.venue}</span>}
+          </div>
+          {expanded && session.description && (
+            <div className="session-card__expanded" onClick={e => e.stopPropagation()}>
+              <p className="session-card__description">{session.description}</p>
+              <button className="session-card__more-btn">Mais detalhes</button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ─── HOME TAB ────────────────────────────────────────────────────────────
+    function HomeTab({ sobreExpanded, onToggleSobre, expandedSessions, onToggleSession, onGoToMateriais, onGoToProgramacao }) {
+      return (
+        <>
+          {/* Sobre */}
+          <div className="section">
+            <h2 className="section-title" style={{ marginBottom:12 }}>Sobre</h2>
+            {sobreExpanded ? (
+              <>
+                <div className="sobre__text" dangerouslySetInnerHTML={{ __html: eventData.aboutHtml }}/>
+                <button className="sobre__toggle sobre__toggle--less" onClick={onToggleSobre}>Mostrar menos</button>
+              </>
+            ) : (
+              <>
+                <p className="sobre__collapsed">{eventData.about}</p>
+                <div className="sobre__toggle-row">
+                  <button className="sobre__toggle" onClick={onToggleSobre}>Mostrar mais</button>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Materiais */}
+          <div className="section">
+            <div className="section-header">
+              <h2 className="section-title">Materiais</h2>
+              <button className="section-link" onClick={onGoToMateriais}>
+                Tudo ({eventData.materials.length})<ArrowRight/>
+              </button>
+            </div>
+            <div className="materials-carousel">
+              {eventData.materials.slice(0,4).map(m => <MaterialItem key={m.id} material={m} compact={true}/>)}
+            </div>
+          </div>
+
+          {/* Programação preview */}
+          <div className="section">
+            <h2 className="section-title" style={{ marginBottom:14 }}>Programação</h2>
+            <div className="schedule-list">
+              {eventData.schedule.map(dg => (
+                <div key={dg.day} className="schedule-day-group">
+                  <div className="day-label">
+                    <span className="day-label__name">{dg.dayName}</span>
+                    <span className="day-label__number">{dg.day}</span>
+                  </div>
+                  <div className="day-sessions">
+                    {dg.sessions.map(s => (
+                      <ScheduleItem key={s.id} session={s} expanded={expandedSessions.has(s.id)} onToggle={() => onToggleSession(s.id)}/>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button className="btn-show-all" onClick={onGoToProgramacao}>Mostrar tudo</button>
+          </div>
+        </>
+      );
+    }
+
+    // ─── APP ─────────────────────────────────────────────────────────────────
+    function App() {
+      const [tab, setTab] = useState('inicio');
+      const [sobreExpanded, setSobreExpanded] = useState(false);
+      const [expandedSessions, setExpandedSessions] = useState(new Set());
+
+      const toggleSession = id => {
+        setExpandedSessions(prev => {
+          const next = new Set(prev);
+          next.has(id) ? next.delete(id) : next.add(id);
+          return next;
+        });
+      };
+
+      const goToTab = t => { setTab(t); window.scrollTo({ top:0, behavior:'smooth' }); };
+
+      return (
+        <div className="app">
+          {/* Hero */}
+          <div className="hero">
+            <button className="hero__btn hero__back" onClick={() => window.history.back()}><BackIcon/></button>
+            <button className="hero__btn hero__menu"><DotsIcon/></button>
+            <div className="hero__gradient"/>
+          </div>
+
+          {/* Event Info */}
+          <div className="event-info">
+            <h1 className="event-info__title">{eventData.name}</h1>
+            <div className="event-info__details">
+              <div className="event-info__row">
+                <span className="event-info__icon"><CalendarIcon/></span>
+                <span className="event-info__text">{eventData.date}</span>
+              </div>
+              <div className="event-info__row">
+                <span className="event-info__icon"><LocationIcon/></span>
+                <span className="event-info__text">{eventData.location}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="action-buttons">
+            <button className="btn-tickets"><TicketIcon/>Mostrar ingressos ({eventData.ticketCount})</button>
+            <div className="btn-row">
+              <button className="btn-secondary"><CalendarIcon/>Calendário</button>
+              <button className="btn-secondary"><LocationIcon/>Localização</button>
+            </div>
+          </div>
+
+          {/* Tab Bar */}
+          <div className="tab-bar">
+            {[['inicio','Início'],['materiais','Materiais'],['programacao','Programação']].map(([id,label]) => (
+              <button key={id} className={`tab-bar__tab${tab===id?' tab-bar__tab--active':''}`} onClick={() => goToTab(id)}>{label}</button>
+            ))}
+          </div>
+
+          {/* Tab Content */}
+          <div className="tab-content">
+            {tab === 'inicio' && (
+              <HomeTab
+                sobreExpanded={sobreExpanded}
+                onToggleSobre={() => setSobreExpanded(v => !v)}
+                expandedSessions={expandedSessions}
+                onToggleSession={toggleSession}
+                onGoToMateriais={() => goToTab('materiais')}
+                onGoToProgramacao={() => goToTab('programacao')}
+              />
+            )}
+            {tab === 'materiais' && (
+              <div className="material-list">
+                {eventData.materials.map(m => <MaterialItem key={m.id} material={m} compact={false}/>)}
+              </div>
+            )}
+            {tab === 'programacao' && (
+              <div className="schedule-list">
+                {eventData.schedule.map(dg => (
+                  <div key={dg.day} className="schedule-day-group">
+                    <div className="day-label">
+                      <span className="day-label__name">{dg.dayName}</span>
+                      <span className="day-label__number">{dg.day}</span>
+                    </div>
+                    <div className="day-sessions">
+                      {dg.sessions.map(s => (
+                        <ScheduleItem key={s.id} session={s} expanded={expandedSessions.has(s.id)} onToggle={() => toggleSession(s.id)}/>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
