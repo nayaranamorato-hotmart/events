@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Workshop Como fazer pizza tradicional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .phone-frame {
+      width: 100%;
+      max-width: 390px;
+      min-height: 100vh;
+      background: #1a1a1a;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      background: #2a1a0e;
+    }
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      opacity: 0.85;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(26,26,26,0.7) 100%);
+    }
+    .hero-back {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .hero-menu {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+      background: #F04E23;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .content { padding: 20px 16px 0; background: #1a1a1a; }
+    .event-title { font-size: 22px; font-weight: 800; color: #fff; text-align: center; margin-bottom: 14px; }
+    .event-meta { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .event-meta-row { display: flex; align-items: center; gap: 8px; color: #ccc; font-size: 13px; }
+    .btn-tickets {
+      width: 100%; background: transparent; border: 1.5px solid #fff; color: #fff;
+      border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      cursor: pointer; margin-bottom: 10px; font-family: 'Inter', sans-serif;
+    }
+    .btn-tickets:active { opacity: 0.8; }
+    .btn-row { display: flex; gap: 10px; margin-bottom: 20px; }
+    .btn-secondary {
+      flex: 1; background: #2a2a2a; border: none; color: #fff; border-radius: 10px;
+      padding: 12px; font-size: 13px; font-weight: 600; display: flex;
+      align-items: center; justify-content: center; gap: 7px;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+    }
+    .btn-secondary:active { opacity: 0.8; }
+    .tabs { display: flex; border-bottom: 1px solid #2e2e2e; margin-bottom: 0; }
+    .tab {
+      flex: 1; text-align: center; padding: 12px 0; font-size: 14px; font-weight: 500;
+      color: #888; cursor: pointer; position: relative; background: none; border: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .tab.active { color: #fff; font-weight: 700; }
+    .tab.active::after {
+      content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 2px; background: #fff; border-radius: 2px 2px 0 0;
+    }
+    .tab-panel { display: none; padding: 20px 0 80px; }
+    .tab-panel.active { display: block; }
+    .section-title { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+    .body-text { font-size: 13px; color: #bbb; line-height: 1.65; margin-bottom: 14px; }
+    .body-text strong { color: #fff; font-weight: 700; }
+    .body-text a { color: #fff; text-decoration: underline; cursor: pointer; }
+    .highlight-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; margin-top: 14px; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .section-header-link { font-size: 13px; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+    .material-card {
+      display: flex; align-items: center; gap: 12px; background: #242424;
+      border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer;
+    }
+    .material-thumb { width: 52px; height: 40px; border-radius: 6px; object-fit: cover; flex-shrink: 0; background: #333; }
+    .material-thumb-icon {
+      width: 52px; height: 40px; border-radius: 6px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    .material-info { flex: 1; min-width: 0; }
+    .material-name { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .material-sub { font-size: 11px; color: #888; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .material-action { flex-shrink: 0; color: #888; display: flex; align-items: center; }
+    .day-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; margin-top: 20px; }
+    .day-label:first-child { margin-top: 0; }
+    .schedule-card { background: #242424; border-radius: 10px; padding: 14px; margin-bottom: 8px; cursor: pointer; }
+    .schedule-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .schedule-card-left { flex: 1; min-width: 0; }
+    .schedule-speakers { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+    .speaker-avatar {
+      width: 22px; height: 22px; border-radius: 50%; background: #444;
+      border: 1.5px solid #1a1a1a; overflow: hidden; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 10px; color: #aaa;
+    }
+    .speaker-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .speaker-avatar + .speaker-avatar { margin-left: -6px; }
+    .speaker-name { font-size: 11px; color: #888; margin-left: 4px; }
+    .schedule-title { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.35; margin-bottom: 6px; }
+    .schedule-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .schedule-time { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #888; }
+    .schedule-location { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #888; }
+    .chevron-btn { flex-shrink: 0; color: #666; transition: transform 0.25s ease; margin-top: 2px; }
+    .chevron-btn.open { transform: rotate(180deg); }
+    .schedule-expand { overflow: hidden; max-height: 0; transition: max-height 0.3s ease, opacity 0.25s ease; opacity: 0; }
+    .schedule-expand.open { max-height: 300px; opacity: 1; }
+    .schedule-expand-inner { padding-top: 12px; border-top: 1px solid #333; margin-top: 12px; }
+    .schedule-expand-text { font-size: 13px; color: #aaa; line-height: 1.6; margin-bottom: 12px; }
+    .btn-details {
+      background: transparent; border: 1.5px solid #555; color: #fff;
+      border-radius: 8px; padding: 9px 18px; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+    }
+    .btn-details:active { opacity: 0.7; }
+    .collapsed-text { display: none; }
+    .expanded-text { display: block; }
+    .bottom-spacer { height: 40px; }
+    .toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: #333; color: #fff; padding: 10px 20px; border-radius: 20px;
+      font-size: 13px; font-weight: 500; transition: transform 0.3s ease;
+      z-index: 100; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+<div class="phone-frame">
+
+  <!-- Hero -->
+  <div class="hero">
+    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80" alt="Workshop Como fazer pizza tradicional" onerror="this.style.display='none'" />
+    <div class="hero-overlay"></div>
+    <div class="hero-back" onclick="goBack()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+    </div>
+    <div class="hero-menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+        <circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <h1 class="event-title" id="event-title">Workshop Como fazer pizza tradicional</h1>
+    <div class="event-meta">
+      <div class="event-meta-row">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        <span>31 de março de 2026</span>
+      </div>
+      <div class="event-meta-row">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span>Gastronomia Descomplicada Academy - São Paulo, SP</span>
+      </div>
+    </div>
+    <button class="btn-tickets" onclick="showToast('Abrindo ingressos...')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 9a3 3 0 010-6h20a3 3 0 010 6v2a3 3 0 000 6H2a3 3 0 000-6V9z"/>
+      </svg>
+      Mostrar ingressos (3)
+    </button>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="showToast('Adicionando ao calendário...')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Calendário
+      </button>
+      <button class="btn-secondary" onclick="showToast('Abrindo localização...')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        Localização
+      </button>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('inicio', this)">Início</button>
+      <button class="tab" onclick="switchTab('materiais', this)">Materiais</button>
+      <button class="tab" onclick="switchTab('programacao', this)">Programação</button>
+    </div>
+  </div>
+
+  <!-- TAB: INÍCIO -->
+  <div id="tab-inicio" class="tab-panel active" style="padding: 20px 16px 80px;">
+    <div class="section-title">Sobre</div>
+    <p class="body-text">Prepare-se para uma experiência gastronômica única e transformadora. O <strong>Workshop Como Fazer Pizza Tradicional</strong> é um evento presencial intensivo de dois dias criado para quem quer dominar de verdade a arte da pizza napolitana — da escolha dos ingredientes à fornada perfeita. 🍕</p>
+    <p class="body-text">Ao longo de dois dias imersivos (10 e 11 de setembro de 2026), você vai aprender na prática, com as mãos na massa, tudo o que separa uma pizza comum de uma pizza extraordinária. O workshop acontece na cozinha profissional da Gastronomia Descomplicada Academy, em São Paulo, com turmas reduzidas para garantir atenção individualizada.</p>
+    <div id="extra-content" class="expanded-text">
+      <p class="highlight-title">O que você vai aprender? 👨‍🍳</p>
+      <p class="body-text">Desde a fermentação lenta da massa — o segredo que a maioria dos cursos ignora — até o molho de tomate San Marzano, a escolha da mozzarella de búfala e a técnica de abertura da massa sem rolo. Você vai entender por que a temperatura do forno importa mais do que qualquer receita.</p>
+      <p class="highlight-title">Técnica de Massa Napolitana:</p>
+      <p class="body-text">Aprenda a preparar a massa com fermentação de 48 horas, hidratação ideal e o ponto exato de elasticidade para uma borda alta e aerada como nas melhores pizzarias de Nápoles.</p>
+      <p class="highlight-title">Molhos e Coberturas Artesanais:</p>
+      <p class="body-text">Do molho cru de tomate pelado ao pesto de manjericão fresco — você vai montar combinações clássicas e autorais com ingredientes selecionados pelos nossos chefs.</p>
+      <p class="highlight-title">Forno e Temperatura:</p>
+      <p class="body-text">Entenda como trabalhar com forno a lenha, forno elétrico de alta temperatura e até o forno convencional de casa para obter resultados profissionais em qualquer ambiente.</p>
+      <p class="highlight-title">Para quem é este workshop? 🎯</p>
+      <p class="body-text">Para apaixonados por gastronomia que querem sair do básico, para quem sonha em abrir uma pizzaria, para chefs em formação e para qualquer pessoa que queira impressionar família e amigos com uma pizza de verdade. Não é necessária experiência prévia — apenas vontade de aprender. <a onclick="toggleText()">Mostrar menos</a></p>
+    </div>
+    <div id="collapsed-content" class="collapsed-text">
+      <p class="body-text">Para apaixonados por gastronomia que querem sair do básico, para quem sonha em abrir uma pizzaria e para qualquer pessoa que queira impressionar com uma pizza de verdade. <a onclick="toggleText()">Mostrar mais</a></p>
+    </div>
+    <div style="margin-top: 24px;">
+      <div class="section-header">
+        <div class="section-title" style="margin-bottom:0;">Materiais</div>
+        <div class="section-header-link" onclick="switchTab('materiais', document.querySelectorAll('.tab')[1])">
+          Tudo (6)
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+      <div class="material-card" onclick="switchTab('materiais', document.querySelectorAll('.tab')[1])">
+        <div class="material-thumb-icon" style="background:#e53e3e; border-radius:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div class="material-info">
+          <div class="material-name">Lista de Materiais</div>
+          <div class="material-sub">PDF · 0.8mb</div>
+        </div>
+        <div class="material-action">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: MATERIAIS -->
+  <div id="tab-materiais" class="tab-panel" style="padding: 16px 16px 80px;">
+
+    <!-- Lista de Materiais PDF -->
+    <div class="material-card" onclick="showToast('Baixando arquivo...')">
+      <div class="material-thumb-icon" style="background:#e53e3e; border-radius:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="material-info"><div class="material-name">Lista de Materiais</div><div class="material-sub">PDF · 0.8mb</div></div>
+      <div class="material-action"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+    </div>
+
+    <!-- Receita Massa Napolitana PDF com thumb -->
+    <div class="material-card" onclick="showToast('Baixando arquivo...')">
+      <img class="material-thumb" src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&q=60" alt="" onerror="this.style.background='#333'" />
+      <div class="material-info"><div class="material-name">Receita-Massa-Napolitana</div><div class="material-sub">PDF · 1.4mb</div></div>
+      <div class="material-action"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+    </div>
+
+    <!-- Guia de Molhos PDF vermelho -->
+    <div class="material-card" onclick="showToast('Baixando arquivo...')">
+      <div class="material-thumb-icon" style="background:#e53e3e; border-radius:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="material-info"><div class="material-name">Guia de Molhos e Coberturas</div><div class="material-sub">PDF · 2.1mb</div></div>
+      <div class="material-action"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+    </div>
+
+    <!-- Vídeo intro YouTube -->
+    <div class="material-card" onclick="showToast('Abrindo link...')">
+      <div class="material-thumb-icon" style="background:#2a2a2a; border-radius:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div>
+      <div class="material-info"><div class="material-name">Vídeo: Introdução ao Workshop</div><div class="material-sub">https://www.youtube.com/watch?...</div></div>
+      <div class="material-action"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
+    </div>
+
+    <!-- Tabela de Fermentação -->
+    <div class="material-card" onclick="showToast('Baixando arquivo...')">
+      <div class="material-thumb-icon" style="background:#2a2a2a; border-radius:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="material-info"><div class="material-name">Tabela de Fermentação</div><div class="material-sub">1.0mb</div></div>
+      <div class="material-action"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+    </div>
+
+    <!-- Certificado de Participação -->
+    <div class="material-card" onclick="showToast('Baixando arquivo...')">
+      <div class="material-thumb-icon" style="background:#2a2a2a; border-radius:6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="material-info"><div class="material-name">Certificado de Participação</div><div class="material-sub">0.5mb</div></div>
+      <div class="material-action"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+    </div>
+
+  </div>
+
+  <!-- TAB: PROGRAMAÇÃO -->
+  <div id="tab-programacao" class="tab-panel" style="padding: 16px 16px 80px;">
+
+    <div class="day-label">SÁB<br/>10</div>
+
+    <div class="schedule-card" onclick="toggleSchedule(this)">
+      <div class="schedule-card-header">
+        <div class="schedule-card-left">
+          <div class="schedule-title">Recepção e boas-vindas</div>
+          <div class="schedule-meta"><div class="schedule-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>9h - 9h30</div></div>
+        </div>
+        <div class="chevron-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="schedule-expand"><div class="schedule-expand-inner"><p class="schedule-expand-text">Credenciamento dos participantes, entrega dos kits do workshop (avental, caderno de receitas e lista de materiais) e apresentação da equipe de chefs instrutores.</p><button class="btn-details" onclick="event.stopPropagation(); showToast('Abrindo detalhes...')">Mais detalhes</button></div></div>
+    </div>
+
+    <div class="schedule-card" onclick="toggleSchedule(this)">
+      <div class="schedule-card-header">
+        <div class="schedule-card-left">
+          <div class="schedule-speakers">
+            <div class="speaker-avatar"><img src="https://i.pravatar.cc/40?img=11" alt="" onerror="this.style.display='none'" /></div>
+            <span class="speaker-name">Chef Antonia Lofaso</span>
+          </div>
+          <div class="schedule-title">A história da pizza napolitana e seus segredos</div>
+          <div class="schedule-meta">
+            <div class="schedule-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>9h30 - 10h30</div>
+            <div class="schedule-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Cozinha Principal</div>
+          </div>
+        </div>
+        <div class="chevron-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="schedule-expand"><div class="schedule-expand-inner"><p class="schedule-expand-text">Uma aula teórica e apaixonante sobre as origens da pizza napolitana, a diferença entre os estilos regionais italianos e por que a fermentação lenta é o verdadeiro segredo de uma boa pizza.</p><button class="btn-details" onclick="event.stopPropagation(); showToast('Abrindo detalhes...')">Mais detalhes</button></div></div>
+    </div>
+
+    <div class="schedule-card" onclick="toggleSchedule(this)">
+      <div class="schedule-card-header">
+        <div class="schedule-card-left">
+          <div class="schedule-speakers">
+            <div class="speaker-avatar"><img src="https://i.pravatar.cc/40?img=22" alt="" onerror="this.style.display='none'" /></div>
+            <span class="speaker-name">Chef Marco Rossi</span>
+          </div>
+          <div class="schedule-title">Mãos na massa: preparando a massa com fermentação de 48h</div>
+          <div class="schedule-meta">
+            <div class="schedule-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>10h30 - 13h</div>
+            <div class="schedule-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Bancadas de Trabalho</div>
+          </div>
+        </div>
+        <div class="chevron-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="schedule-expand"><div class="schedule-expand-inner"><p class="schedule-expand-text">Cada participante prepara sua própria massa do zero. Aprenda a proporção correta de farinha tipo 00, água, sal e fermento natural, e como desenvolver o glúten na medida certa para uma massa elástica e saborosa.</p><button class="btn-details" onclick="event.stopPropagation(); showToast('Abrindo detalhes...')">Mais detalhes</button></div></div>
+    </div>
+
+    <div class="schedule-card" onclick="toggleSchedule(this)">
+      <div class="schedule-card-header">
+        <div class="schedule-card-left">
+          <div class="schedule-title">Almoço — degustação de pizzas clássicas</div>
+          <div class="schedule-meta"><div class="schedule-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>13h - 14h</div></div>
+        </div>
+        <div class="chevron-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="schedule-expand"><div class="schedule-expand-inner"><p class="schedule-expand-text">Pausa para almoço com degustação guiada de pizzas Margherita, Marinara e Quattro Formaggi preparadas pelos chefs instrutores. Momento de networking entre os participantes.</p><button class="btn-details" onclick="event.stopPropagation(); showToast('Abrindo detalhes...')">Mais detalhes</button></div></div>
+    </div>
+
+    <div class="schedule-card" onclick="toggleSchedule(this)">
+      <div class="schedule-card-header">
+        <div class="schedule-card-left">
+          <div class="schedule-speakers">
+            <div class="speaker-avatar"><img src="https://i.pravatar.cc/40?img=5" alt="" onerror="this.style.display='none'" /></div>
+            <span class="speaker-name">Chef Antonia Lofaso</span>
+          </div>
+          <div class="schedule-title">Molhos artesanais: do San Marzano ao pesto fresco</div>
+          <div class="schedule-meta">
+            <div class="schedule-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>14h - 16h</div>
+            <div class="schedule-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Cozinha Principal</div>
+          </div>
+        </div>
+        <div class="chevron-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="schedule-expand"><div class="schedule-expand-inner"><p class="schedule-expand-text">Aprenda a preparar o molho de tomate cru com San Marzano DOP, o pesto de manjericão genovês e o molho branco de ricota. Cada participante leva os molhos para casa em potes.</p><button class="btn-details" onclick="event.stopPropagation(); showToast('Abrindo detalhes...')">Mais detalhes</button></div></div>
+    </div>
+
+    <div class="day-label" style="margin-top:24px;">DOM<br/>11</div>
+
+    <div class="schedule-card" onclick="toggleSchedule(this)">
+      <div class="schedule-card-header">
+        <div class="schedule-card-left">
+          <div class="schedule-speakers">
+            <div class="speaker-avatar"><img src="https://i.pravatar.cc/40?img=33" alt="" onerror="this.style.display='none'" /></div>
+            <span class="speaker-name">Chef Marco Rossi</span>
+          </div>
+          <div class="schedule-title">Abertura da massa e montagem das pizzas</div>
+          <div class="schedule-meta">
+            <div class="schedule-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>9h - 11h30</div>
+            <div class="schedule-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Bancadas de Trabalho</div>
+          </div>
+        </div>
+        <div class="chevron-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="schedule-expand"><div class="schedule-expand-inner"><p class="schedule-expand-text">Com a massa fermentada do dia anterior, cada participante aprende a técnica de abertura manual sem rolo, a distribuição correta dos ingredientes e a montagem das pizzas clássicas e autorais.</p><button class="btn-details" onclick="event.stopPropagation(); showToast('Abrindo detalhes...')">Mais detalhes</button></div></div>
+    </div>
+
+    <div class="schedule-card" onclick="toggleSchedule(this)">
+      <div class="schedule-card-header">
+        <div class="schedule-card-left">
+          <div class="schedule-speakers">
+            <div class="speaker-avatar"><img src="https://i.pravatar.cc/40?img=47" alt="" onerror="this.style.display='none'" /></div>
+            <span class="speaker-name">Chef Antonia Lofaso</span>
+          </div>
+          <div class="schedule-title">Forno: temperatura, tempo e o ponto perfeito</div>
+          <div class="schedule-meta">
+            <div class="schedule-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>11h30 - 13h</div>
+            <div class="schedule-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Área do Forno a Lenha</div>
+          </div>
+        </div>
+        <div class="chevron-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="schedule-expand"><div class="schedule-expand-inner"><p class="schedule-expand-text">Aprenda a trabalhar com forno a lenha a 450°C, forno elétrico profissional e como adaptar a técnica para o forno convencional de casa. Cada participante assa sua própria pizza.</p><button class="btn-details" onclick="event.stopPropagation(); showToast('Abrindo detalhes...')">Mais detalhes</button></div></div>
+    </div>
+
+    <div class="schedule-card" onclick="toggleSchedule(this)">
+      <div class="schedule-card-header">
+        <div class="schedule-card-left">
+          <div class="schedule-speakers">
+            <div class="speaker-avatar"><img src="https://i.pravatar.cc/40?img=60" alt="" onerror="this.style.display='none'" /></div>
+            <div class="speaker-avatar" style="margin-left:-6px;"><img src="https://i.pravatar.cc/40?img=22" alt="" onerror="this.style.display='none'" /></div>
+            <span class="speaker-name">Chef Antonia Lofaso, Chef Marco Rossi</span>
+          </div>
+          <div class="schedule-title">Encerramento, degustação final e entrega de certificados</div>
+          <div class="schedule-meta">
+            <div class="schedule-time"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>14h - 16h</div>
+            <div class="schedule-location"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Salão de Degustação</div>
+          </div>
+        </div>
+        <div class="chevron-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="schedule-expand"><div class="schedule-expand-inner"><p class="schedule-expand-text">Degustação coletiva de todas as pizzas produzidas no workshop, avaliação dos chefs, sessão de perguntas e respostas e entrega dos certificados de conclusão. Cada participante leva para casa o caderno de receitas completo.</p><button class="btn-details" onclick="event.stopPropagation(); showToast('Abrindo detalhes...')">Mais detalhes</button></div></div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+  function goBack() {
+    window.location.href = 'index.html';
+  }
+
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+    const titleEl = document.getElementById('event-title');
+    titleEl.textContent = 'Workshop Como fazer pizza tradicional';
+  }
+
+  function toggleSchedule(card) {
+    const expand = card.querySelector('.schedule-expand');
+    const chevron = card.querySelector('.chevron-btn');
+    const isOpen = expand.classList.contains('open');
+    document.querySelectorAll('.schedule-expand').forEach(e => e.classList.remove('open'));
+    document.querySelectorAll('.chevron-btn').forEach(c => c.classList.remove('open'));
+    if (!isOpen) { expand.classList.add('open'); chevron.classList.add('open'); }
+  }
+
+  function toggleText() {
+    const extra = document.getElementById('extra-content');
+    const collapsed = document.getElementById('collapsed-content');
+    if (extra.style.display === 'none') {
+      extra.style.display = 'block'; collapsed.style.display = 'none';
+    } else {
+      extra.style.display = 'none'; collapsed.style.display = 'block';
+    }
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+</script>
+</body>
+</html>

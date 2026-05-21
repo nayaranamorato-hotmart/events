@@ -1,18 +1,431 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Hotmart Spark</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Gastronomia Descomplicada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      font-family: 'Inter', sans-serif;
+      background: #111;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+    .phone {
+      width: 100%;
+      max-width: 390px;
+      background: #1a1a1a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* TOP NAV */
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: #1a1a1a;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topnav-left { display: flex; align-items: center; gap: 12px; }
+    .topnav-logo { display: flex; align-items: center; gap: 8px; }
+    .topnav-brand {
+      font-size: 13px; font-weight: 800; color: #fff;
+      text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.2;
+    }
+    .topnav-brand span { display: block; }
+    .topnav-right { display: flex; align-items: center; gap: 14px; }
+    .topnav-icon { color: #fff; cursor: pointer; }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%; background: #555;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #fff; cursor: pointer;
+    }
+
+    /* HERO BANNER */
+    .hero-banner {
+      position: relative; margin: 0 16px 20px; border-radius: 14px;
+      overflow: hidden; height: 160px; background: #2a1a0e; cursor: pointer;
+    }
+    .hero-banner img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+    .hero-banner-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    }
+    .hero-banner-text {
+      font-size: 18px; font-weight: 800; color: #fff; text-align: center; line-height: 1.3;
+    }
+    .hero-banner-text strong { display: block; }
+
+    /* SECTION */
+    .section { padding: 0 16px; margin-bottom: 24px; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .section-title { font-size: 16px; font-weight: 700; color: #fff; }
+    .section-link {
+      font-size: 13px; color: #aaa; display: flex; align-items: center; gap: 3px; cursor: pointer;
+    }
+    .section-link:hover { color: #fff; }
+
+    /* PRÓXIMOS EVENTOS */
+    .events-scroll {
+      display: flex; gap: 12px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;
+    }
+    .events-scroll::-webkit-scrollbar { display: none; }
+    .event-card {
+      flex-shrink: 0; width: 220px; background: #242424; border-radius: 12px;
+      overflow: hidden; cursor: pointer; transition: transform 0.2s ease; text-decoration: none;
+    }
+    .event-card:active { transform: scale(0.97); }
+    .event-card-img { position: relative; height: 90px; background: #333; overflow: hidden; }
+    .event-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .event-badge {
+      position: absolute; top: 8px; left: 8px; background: #2a7a2a; color: #fff;
+      font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 5px;
+    }
+    .event-card-body { padding: 10px 12px 12px; }
+    .event-date { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #888; margin-bottom: 4px; }
+    .event-name { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 8px; line-height: 1.3; }
+    .event-card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .btn-comprar {
+      background: #fff; color: #111; font-size: 12px; font-weight: 700;
+      padding: 6px 14px; border-radius: 7px; border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-comprar:active { opacity: 0.8; }
+    .attendees { display: flex; align-items: center; }
+    .attendee-dot {
+      width: 22px; height: 22px; border-radius: 50%; background: #555;
+      border: 2px solid #242424; margin-left: -6px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; font-size: 9px; color: #ccc;
+    }
+    .attendee-dot:first-child { margin-left: 0; }
+    .attendee-dot img { width: 100%; height: 100%; object-fit: cover; }
+    .attendee-more { font-size: 10px; color: #888; margin-left: 6px; }
+
+    /* MEUS PRODUTOS */
+    .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .product-card {
+      border-radius: 12px; overflow: hidden; cursor: pointer;
+      transition: transform 0.2s ease; background: #242424; text-decoration: none; display: block;
+    }
+    .product-card:active { transform: scale(0.97); }
+    .product-card-img { height: 130px; background: #333; overflow: hidden; }
+    .product-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .product-card-body { padding: 8px 10px 10px; }
+    .product-type { font-size: 10px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+    .product-name { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; }
+
+    /* PRODUTOS À VENDA */
+    .sale-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .sale-card {
+      border-radius: 12px; overflow: hidden; cursor: pointer; background: #242424;
+      transition: transform 0.2s ease; text-decoration: none; display: block;
+    }
+    .sale-card:active { transform: scale(0.97); }
+    .sale-card-img { height: 150px; background: #333; overflow: hidden; position: relative; }
+    .sale-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .lock-badge {
+      position: absolute; top: 8px; left: 8px; width: 28px; height: 28px;
+      background: rgba(0,0,0,0.55); border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sale-card-body { padding: 8px 10px 12px; }
+    .sale-type { font-size: 10px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+    .sale-name { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.3; margin-bottom: 4px; }
+    .sale-price { font-size: 12px; color: #4caf50; font-weight: 600; }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 390px; background: #1a1a1a;
+      border-top: 1px solid #2a2a2a; display: flex; align-items: center;
+      justify-content: space-around; padding: 10px 0 16px; z-index: 50;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      cursor: pointer; color: #666; font-size: 10px; font-weight: 500; transition: color 0.2s;
+    }
+    .nav-item.active { color: #fff; }
+    .nav-item:hover { color: #ccc; }
+
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeSlideIn 0.35s ease both; }
+    .bottom-spacer { height: 80px; }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(60px);
+      background: #333; color: #fff; padding: 9px 18px; border-radius: 20px;
+      font-size: 13px; font-weight: 500; transition: transform 0.3s ease;
+      z-index: 300; white-space: nowrap; font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body>
+<div class="phone fade-in">
+
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="topnav-left">
+      <div class="topnav-icon" onclick="showToast('Menu')">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </div>
+      <div class="topnav-logo">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect x="4" y="8" width="20" height="14" rx="2" stroke="white" stroke-width="2"/>
+          <path d="M9 8V6a3 3 0 016 0v2" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <path d="M10 14h8M10 17h5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <div class="topnav-brand">
+          <span>GASTRONOMIA</span>
+          <span>DESCOMPLICADA</span>
+        </div>
+      </div>
+    </div>
+    <div class="topnav-right">
+      <div class="topnav-icon" onclick="showToast('Buscar')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </div>
+      <div class="avatar">SM</div>
+    </div>
+  </nav>
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner" onclick="showToast('Abrindo destaque...')">
+    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80" alt="Cozinha" onerror="this.style.display='none'" />
+    <div class="hero-banner-overlay">
+      <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
+        <rect x="4" y="8" width="20" height="14" rx="2" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
+        <path d="M9 8V6a3 3 0 016 0v2" stroke="rgba(255,255,255,0.8)" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="hero-banner-text">
+        Sua vida na cozinha,
+        <strong>descomplicada.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRÓXIMOS EVENTOS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Próximos eventos</div>
+      <div class="section-link" onclick="showToast('Ver todos os eventos')">
+        Todos (3)
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </div>
+    <div class="events-scroll">
+
+      <!-- Evento 1 → detalhes.html -->
+      <a class="event-card" href="detalhes.html">
+        <div class="event-card-img">
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=70" alt="Pizza" onerror="this.style.background='#444'" />
+          <div class="event-badge">Em 5 dias</div>
+        </div>
+        <div class="event-card-body">
+          <div class="event-date">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            10 de setembro
+          </div>
+          <div class="event-name">Como fazer Pizza Tradicio...</div>
+          <div class="event-card-footer">
+            <button class="btn-comprar" onclick="event.preventDefault(); event.stopPropagation(); window.location.href='detalhes.html'">Comprar</button>
+            <div class="attendees">
+              <div class="attendee-dot"><img src="https://i.pravatar.cc/30?img=1" alt="" onerror="this.style.display='none'" /></div>
+              <div class="attendee-dot"><img src="https://i.pravatar.cc/30?img=2" alt="" onerror="this.style.display='none'" /></div>
+              <div class="attendee-dot"><img src="https://i.pravatar.cc/30?img=3" alt="" onerror="this.style.display='none'" /></div>
+              <span class="attendee-more">+20</span>
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Evento 2 -->
+      <div class="event-card" onclick="showToast('Abrindo evento...')">
+        <div class="event-card-img">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=70" alt="Gastronomia" onerror="this.style.background='#444'" />
+          <div class="event-badge">Em 12 dias</div>
+        </div>
+        <div class="event-card-body">
+          <div class="event-date">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            17 de setembro
+          </div>
+          <div class="event-name">Masterclass de Massas...</div>
+          <div class="event-card-footer">
+            <button class="btn-comprar" onclick="event.stopPropagation(); showToast('Comprando...')">Comprar</button>
+            <div class="attendees">
+              <div class="attendee-dot"><img src="https://i.pravatar.cc/30?img=5" alt="" onerror="this.style.display='none'" /></div>
+              <div class="attendee-dot"><img src="https://i.pravatar.cc/30?img=6" alt="" onerror="this.style.display='none'" /></div>
+              <span class="attendee-more">+8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Evento 3 -->
+      <div class="event-card" onclick="showToast('Abrindo evento...')">
+        <div class="event-card-img">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=70" alt="Culinária" onerror="this.style.background='#444'" />
+        </div>
+        <div class="event-card-body">
+          <div class="event-date">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            2 de outubro
+          </div>
+          <div class="event-name">Cozinha Francesa ao Vivo</div>
+          <div class="event-card-footer">
+            <button class="btn-comprar" onclick="event.stopPropagation(); showToast('Comprando...')">Comprar</button>
+            <div class="attendees">
+              <div class="attendee-dot"><img src="https://i.pravatar.cc/30?img=9" alt="" onerror="this.style.display='none'" /></div>
+              <span class="attendee-more">+5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MEUS PRODUTOS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Meus produtos</div>
+    </div>
+    <div class="products-grid">
+
+      <!-- Produto EVENTO → detalhes.html -->
+      <a class="product-card" href="detalhes.html">
+        <div class="product-card-img">
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=70" alt="Pizza" onerror="this.style.background='#444'" />
+        </div>
+        <div class="product-card-body">
+          <div class="product-type">Evento</div>
+          <div class="product-name">Como fazer Pizza Tradicional Napolitana</div>
+        </div>
+      </a>
+
+      <!-- Produto CURSO ONLINE -->
+      <div class="product-card" onclick="showToast('Abrindo curso...')">
+        <div class="product-card-img">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=70" alt="Gastronomia" onerror="this.style.background='#444'" />
+        </div>
+        <div class="product-card-body">
+          <div class="product-type">Curso Online</div>
+          <div class="product-name">Gastronomia Descomplicada 2.0</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PRODUTOS À VENDA -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Produtos à venda</div>
+    </div>
+    <div class="sale-grid">
+
+      <div class="sale-card" onclick="showToast('Abrindo produto...')">
+        <div class="sale-card-img">
+          <img src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=400&q=70" alt="Cozinha Italiana" onerror="this.style.background='#444'" />
+          <div class="lock-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        </div>
+        <div class="sale-card-body">
+          <div class="sale-type">Curso Online</div>
+          <div class="sale-name">Cozinha Italiana</div>
+          <div class="sale-price">R$ 997,00 à vista</div>
+        </div>
+      </div>
+
+      <!-- Evento à venda → detalhes.html -->
+      <a class="sale-card" href="detalhes.html">
+        <div class="sale-card-img">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=70" alt="Cozinha Francesa" onerror="this.style.background='#444'" />
+          <div class="lock-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        </div>
+        <div class="sale-card-body">
+          <div class="sale-type">Evento</div>
+          <div class="sale-name">Cozinha Francesa na prática</div>
+          <div class="sale-price">R$ 997,00 à vista</div>
+        </div>
+      </a>
+
+      <div class="sale-card" onclick="showToast('Abrindo produto...')">
+        <div class="sale-card-img">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=70" alt="Técnicas" onerror="this.style.background='#444'" />
+          <div class="lock-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        </div>
+        <div class="sale-card-body">
+          <div class="sale-type">Curso Online</div>
+          <div class="sale-name">Técnicas de Chef</div>
+          <div class="sale-price">R$ 497,00 à vista</div>
+        </div>
+      </div>
+
+      <div class="sale-card" onclick="showToast('Abrindo produto...')">
+        <div class="sale-card-img">
+          <img src="https://images.unsplash.com/photo-1493770348161-369560ae357d?w=400&q=70" alt="Confeitaria" onerror="this.style.background='#444'" />
+          <div class="lock-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        </div>
+        <div class="sale-card-body">
+          <div class="sale-type">Curso Online</div>
+          <div class="sale-name">Confeitaria Artesanal</div>
+          <div class="sale-price">R$ 297,00 à vista</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bottom-spacer"></div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <div class="nav-item active">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Início
+    </div>
+    <div class="nav-item" onclick="showToast('Produtos')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Produtos
+    </div>
+    <div class="nav-item" onclick="showToast('Comunidade')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Comunidade
+    </div>
+    <div class="nav-item" onclick="showToast('Perfil')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Perfil
+    </div>
+  </nav>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.style.transform = 'translateX(-50%) translateY(60px)'; }, 2000);
+  }
+</script>
+</body>
 </html>
